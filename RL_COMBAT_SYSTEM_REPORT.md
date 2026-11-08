@@ -19,12 +19,12 @@ wushin/
 │   ├── logs/                      # Training metric logs (JSON Lines format)
 │   │   ├── ppo_progress.jsonl     # PPO training history & evaluations
 │   │   ├── dqn_progress.jsonl     # DQN training history & evaluations
-│   │   └── qlearning_progress.jsonl # Q-Learning training history & evaluations
+│   │   └── qlearning_progress.jsonl # A2C ("qlearning") training history & evaluations
 │   ├── plots/                     # Exported evaluation graph dashboards (.png)
 │   ├── combat_env.py              # Gym-like combat environment simulator (90 states, 9 actions, reward shaping)
-│   ├── train_ppo.py               # Mini-batch PPO trainer with GAE, action masking, and target KL early stopping
+│   ├── train_ppo.py               # PPO trainer: clipped objective, GAE, action masking, 4 full-batch epochs per rollout
 │   ├── train_dqn.py               # Dueling Double DQN trainer with Replay Buffer and Polyak target updates
-│   ├── train_qlearning.py         # Synchronous Advantage Actor-Critic (A2C/Q-Learning) trainer
+│   ├── train_qlearning.py         # Advantage Actor-Critic (A2C) trainer (named "qlearning" in the code)
 │   ├── policy_server.py           # Universal UDP inference server connecting Godot to Python PyTorch models
 │   └── plot_training_metrics.py   # Matplotlib 8-panel training analytics dashboard visualizer
 ├── Scripts/
@@ -129,7 +129,7 @@ $$R_t = R_{\text{action}} + R_{\text{damage}} + R_{\text{defense}} + R_{\text{sy
 
 ## 5. Loss Functions Across the 3 Architectures
 
-### A. Mini-Batch PPO (`train_ppo.py`)
+### A. PPO (`train_ppo.py`)
 * **Clipped Surrogate Policy Loss**:
   $$L^{\text{CLIP}}(\theta) = -\hat{\mathbb{E}}_{t} \left[ \min\left( r_t(\theta) \hat{A}_t, \, \text{clip}(r_t(\theta), 1-\epsilon_{\text{clip}}, 1+\epsilon_{\text{clip}}) \hat{A}_t \right) \right]$$
   where $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}$.
@@ -139,7 +139,7 @@ $$R_t = R_{\text{action}} + R_{\text{damage}} + R_{\text{defense}} + R_{\text{sy
   $$S[\pi_\theta](s_t) = -\sum_{a \in \mathcal{A}} \pi_\theta(a|s_t) \log \pi_\theta(a|s_t)$$
 * **Total Loss**:
   $$L^{\text{PPO}}(\theta) = L^{\text{CLIP}}(\theta) + c_1 L^{\text{VF}}(\theta) - c_2 S[\pi_\theta](s_t)$$
-  with randomized mini-batch shuffling (`mini_batch_size = 64`) and early epoch break if $\text{Approx-KL} > 1.5 \times \text{Target-KL}$.
+  Each update runs 4 epochs over the full 1024-step rollout, one gradient step per epoch (no mini-batches, no KL early stopping). Advantages use GAE ($\gamma = 0.99$, $\lambda = 0.95$) and are normalised per batch. Exploration comes from sampling $a_t \sim \pi_\theta$, and during training an $\epsilon$-greedy schedule (0.35 $\to$ 0.02) replaces some actions with random legal ones.
 
 ### B. Dueling Double DQN (`train_dqn.py`)
 * **Dueling Architecture Decomposition**:
@@ -151,10 +151,11 @@ $$R_t = R_{\text{action}} + R_{\text{damage}} + R_{\text{defense}} + R_{\text{sy
   $$L^{\text{DQN}}(\theta) = \frac{1}{B} \sum_{i=1}^B \text{Huber}\left( Q(s_i, a_i; \theta) - y_i \right)$$
 * **Polyak Target Soft-Update**: $\theta^{-} \leftarrow \tau \theta + (1-\tau)\theta^{-}$ ($\tau = 0.005$).
 
-### C. Synchronous Advantage Q-Learning / A2C (`train_qlearning.py`)
-* **Policy Gradient Loss with GAE Returns**:
+### C. Advantage Actor-Critic / A2C (`train_qlearning.py`)
+* **Returns and Advantages**: computed backwards over the rollout, $R_t = r_t + \gamma (1 - d_t) R_{t+1}$, bootstrapped from $V$ at the end of the rollout; $\hat{A}_t = R_t - V_\theta(s_t)$, normalised per batch. One gradient step per rollout. Despite the file name, this is a policy-gradient method, not Q-learning.
+* **Policy Gradient Loss**:
   $$L^{\text{policy}}(\theta) = -\frac{1}{N} \sum_{t=1}^N \log \pi_\theta(a_t|s_t) \hat{A}_t$$
-* **Temporal Difference Critic Loss**:
+* **Critic Loss**:
   $$L^{\text{value}}(\theta) = \frac{1}{2N} \sum_{t=1}^N \left( R_t - V_\theta(s_t) \right)^2$$
 * **Total Loss**:
   $$L^{\text{A2C}}(\theta) = L^{\text{policy}}(\theta) + c_1 L^{\text{value}}(\theta) - c_2 H(\pi_\theta)$$
@@ -190,9 +191,9 @@ $$R_t = R_{\text{action}} + R_{\text{damage}} + R_{\text{defense}} + R_{\text{sy
 
 | Model | Underlying Mechanics | Why It Fits This Combat Domain |
 |---|---|---|
-| **DILUC PPO** | On-policy actor-critic with clipped probability ratio and mini-batch stochastic updates. | **Best Overall**: The clipped trust-region prevents destructive policy updates. Learns intricate multi-step rotations smoothly and stably without falling off performance cliffs. |
+| **DILUC PPO** | On-policy actor-critic with clipped probability ratio and several epochs per rollout. | **Best Overall**: The clipped trust-region prevents destructive policy updates. Learns intricate multi-step rotations smoothly and stably without falling off performance cliffs. |
 | **DILUC DQN** | Value-based Q-learning with Dueling architecture, Replay Buffer, and Double-Q targets. | **Off-Policy Sample Efficiency**: Re-samples past high-damage combos from memory. Highly effective once reward gaming (stalling) is restricted. |
-| **DILUC Q-LEARNING** | Synchronous Advantage Actor-Critic (A2C) with GAE advantage baseline. | **Low Latency & Fast Execution**: Does not require maintaining a 50,000-step replay buffer or multiple epoch iterations; directly optimizes state-value advantages. |
+| **DILUC A2C ("qlearning")** | Advantage Actor-Critic (A2C) with an n-step return baseline; a policy-gradient method despite the file name. | **Low Latency & Fast Execution**: Does not require maintaining a 50,000-step replay buffer or multiple epoch iterations; directly optimizes state-value advantages. |
 
 ---
 ---
@@ -202,7 +203,7 @@ $$R_t = R_{\text{action}} + R_{\text{damage}} + R_{\text{defense}} + R_{\text{sy
 # Multi-Agent Synergy and Hierarchical Action Masking for Real-Time Action RPG Combat Optimization
 
 ### Abstract
-Real-time action role-playing games (ARPGs) present a complex decision-making challenge for autonomous agents due to multi-character party switching, animation-locked cooldown rhythms, and non-linear buff synergies. This paper proposes a deep reinforcement learning framework that solves party-based combat in a custom 3D environment developed in Godot Engine 4. We formulate combat as a constrained Markov Decision Process (MDP) with a 90-dimensional feature space integrating real-time post-buff stat scaling and look-ahead rhythm tokens. We benchmark three distinct architectures: Mini-Batch Proximal Policy Optimization (PPO), Dueling Double Deep Q-Networks (DDQN), and Synchronous Advantage Actor-Critic (A2C). We uncover and resolve an "infinite stall-and-heal" policy degeneracy in value-based learning where agents exploited switch bonuses to run down the combat clock. With our proposed hierarchical action masking, anti-cancel constraints, and terminal penalty reformulation, our Mini-Batch PPO policy achieves a 100.0% win rate against a formidable boss encounter, mastering sequential character rotations: deploying support buffs and team heals before transferring field presence to a dedicated hypercarry for amplified critical strikes.
+Real-time action role-playing games (ARPGs) present a complex decision-making challenge for autonomous agents due to multi-character party switching, animation-locked cooldown rhythms, and non-linear buff synergies. This paper proposes a deep reinforcement learning framework that solves party-based combat in a custom 3D environment developed in Godot Engine 4. We formulate combat as a constrained Markov Decision Process (MDP) with a 90-dimensional feature space integrating real-time post-buff stat scaling and look-ahead rhythm tokens. We benchmark three distinct architectures: Proximal Policy Optimization (PPO), Dueling Double Deep Q-Networks (DDQN), and Synchronous Advantage Actor-Critic (A2C). We uncover and resolve an "infinite stall-and-heal" policy degeneracy in value-based learning where agents exploited switch bonuses to run down the combat clock. With our proposed hierarchical action masking, anti-cancel constraints, and terminal penalty reformulation, our PPO policy achieves a 100.0% win rate against a formidable boss encounter, mastering sequential character rotations: deploying support buffs and team heals before transferring field presence to a dedicated hypercarry for amplified critical strikes.
 
 ### Index Terms
 Deep Reinforcement Learning, Proximal Policy Optimization, Deep Q-Networks, Action Masking, Game AI, Multi-Character Synergy, Real-Time Combat Optimization.
@@ -219,16 +220,16 @@ Developing artificial intelligence capable of learning these sequential rotation
 
 **Main Contributions**:
 * We introduce a synchronized 90-dimensional observation state that incorporates real-time post-buff effective statistics and look-ahead pattern tokens.
-* We develop a unified reinforcement learning pipeline supporting PPO, DQN, and Q-Learning/A2C, connected via an asynchronous UDP bridge to the Godot 4 game engine.
+* We develop a unified reinforcement learning pipeline supporting PPO, Dueling Double DQN, and A2C, connected via an asynchronous UDP bridge to the Godot 4 game engine.
 * We identify and resolve the "Infinite Stall Loop" failure mode in Double DQN by introducing anti-cancel action masking and timeout penalty balancing.
-* We demonstrate that Mini-Batch PPO with approximate KL early stopping achieves monotonic convergence, outperforming unconstrained policy gradient and value-based alternatives.
+* We show that clipped PPO with action masking converges most stably of the three methods, outperforming the unclipped policy gradient (A2C) and value-based (DQN) alternatives.
 
 ---
 
 ### 2. Related Work / Literature Review
 Reinforcement learning has achieved remarkable milestones in competitive games, from board games (*AlphaZero*) to real-time strategy games (*StarCraft II*, *Dota 2*). In fighting games and action environments, researchers have explored frame-by-frame action selection. However, existing work frequently assumes single-character control without off-field ability tracking.
 
-Traditional Deep Q-Networks (Mnih et al., 2015) suffer from overestimation bias and struggles in long-horizon sequential environments without extensive reward shaping. While Dueling Architectures (Wang et al., 2016) decoupled value and advantage streams, they remain vulnerable to reward gaming when intermediate rewards exceed terminal penalties. Proximal Policy Optimization (Schulman et al., 2017) addressed policy volatility via clipped probability ratios, but vanilla implementations with full-batch rollouts suffer from temporal auto-correlation. Our work bridges this gap by applying mini-batch shuffled PPO with look-ahead rhythm tokens in a multi-character rotation environment.
+Traditional Deep Q-Networks (Mnih et al., 2015) suffer from overestimation bias and struggles in long-horizon sequential environments without extensive reward shaping. While Dueling Architectures (Wang et al., 2016) decoupled value and advantage streams, they remain vulnerable to reward gaming when intermediate rewards exceed terminal penalties. Proximal Policy Optimization (Schulman et al., 2017) addressed policy volatility via clipped probability ratios, Our work applies clipped PPO with action masking and look-ahead rhythm tokens to a multi-character rotation environment.
 
 ---
 
@@ -263,33 +264,29 @@ flowchart TD
 
     ActionChoice --> Environment
     Environment --> RewardCalc[Reward Shaping R_t]
-    RewardCalc --> Optimization[Mini-Batch PPO / Double DQN / A2C]
+    RewardCalc --> Optimization[PPO / Dueling Double DQN / A2C]
 ```
 
-#### Mini-Batch PPO with Action Masking & KL Early Stopping
+#### PPO with Action Masking
 ```
-Algorithm 1: Mini-Batch PPO for Multi-Character Combat
+Algorithm 1: PPO for Multi-Character Combat
 ------------------------------------------------------------------------------------------------
-1: Initialize policy/value network parameters θ, environment Env, hyperparams (γ, λ, ε_clip, Target-KL)
+1: Initialize policy/value network parameters θ, environment Env, hyperparams (γ, λ, ε_clip, ε-greedy schedule)
 2: for update = 1 to TotalUpdates do
-3:     Collect trajectory buffer D of length N using policy π_θ and action mask M(s)
-4:     Compute generalized advantage estimates (GAE) A_1...N and discounted returns R_1...N
+3:     Collect trajectory buffer D of N = 1024 steps: sample a ~ π_θ under action mask M(s);
+       with probability ε (decaying 0.35 → 0.02) take a random legal action instead
+4:     Compute generalized advantage estimates (GAE) A_1...N and returns R_1...N
 5:     Normalize advantages: A = (A - μ_A) / (σ_A + 1e-8)
-6:     for epoch = 1 to Epochs do
-7:         Randomly shuffle indices of buffer D
-8:         for each mini-batch b of size B do
-9:             Forward pass: logits, values = Model(s_b)
-10:            Apply action mask: logits[~M(s_b)] = -1e9
-11:            Compute new log probabilities π_θ(a_b | s_b) and entropy H
-12:            Compute probability ratio r(θ) = exp(log π_θ(a_b) - log π_old(a_b))
-13:            Compute clipped objective L_CLIP(θ) = -min(r(θ)A_b, clip(r(θ), 1-ε, 1+ε)A_b)
-14:            Compute value loss L_VF(θ) = 0.5 * (R_b - values)^2
-15:            Compute total loss L(θ) = L_CLIP + c1 * L_VF - c2 * H
-16:            Update θ via Adam optimizer with gradient clipping
-17:            Calculate approx_kl = ((r(θ) - 1) - log r(θ))
-18:        if mean(approx_kl) > 1.5 * Target-KL then
-19:            Early stop epoch loop; proceed to next update
-20:    Every LogInterval updates: evaluate model greedily (ε=0) on 12 clean combat episodes
+6:     for epoch = 1 to 4 do                       # one full-batch gradient step per epoch
+7:         Forward pass on all N steps: logits, values = Model(s)
+8:         Apply action mask: logits[~M(s)] = -1e9
+9:         Compute new log probabilities π_θ(a | s) and entropy H
+10:        Compute probability ratio r(θ) = exp(log π_θ(a) - log π_old(a))
+11:        Compute clipped objective L_CLIP(θ) = -min(r(θ)A, clip(r(θ), 1-ε, 1+ε)A)
+12:        Compute value loss L_VF(θ) = 0.5 * (R - values)^2
+13:        Compute total loss L(θ) = L_CLIP + c1 * L_VF - c2 * H
+14:        Update θ via Adam optimizer with gradient clipping (max norm 0.5)
+15:    Every LogInterval updates: evaluate model greedily (ε=0) on 12 clean combat episodes
 ------------------------------------------------------------------------------------------------
 ```
 
@@ -310,14 +307,15 @@ Communication between the Python inference engine and the Godot game client is m
 
 ### 6. Experimental Setup
 
-| Parameter | PPO Configuration | DQN Configuration | Q-Learning (A2C) Configuration |
+| Parameter | PPO Configuration | DQN Configuration | A2C ("qlearning") Configuration |
 |---|---|---|---|
 | **Observation Dimension** | 90 | 90 | 90 |
 | **Action Count** | 9 | 9 | 9 |
 | **Optimizer** | Adam ($3 \times 10^{-4}$) | Adam ($2 \times 10^{-4}$) | Adam ($3 \times 10^{-4}$) |
 | **Discount Factor ($\gamma$)** | 0.99 | 0.99 | 0.99 |
 | **GAE Lambda ($\lambda$)** | 0.95 | N/A | N/A |
-| **Batch / Mini-Batch Size**| 64 (from 1024 rollout) | 64 (from 50,000 buffer) | 64 (from 1024 rollout) |
+| **Gradient Batch** | 1024 (full rollout, 4 epochs) | 64 (from 50,000 buffer) | 1024 (full rollout, 1 step) |
+| **Exploration** | Policy sampling + $\epsilon$-greedy 0.35 $\to$ 0.02 | $\epsilon$-greedy 0.50 $\to$ 0.02 | Policy sampling + $\epsilon$-greedy 0.35 $\to$ 0.02 |
 | **Clip Parameter ($\epsilon_{\text{clip}}$)** | 0.20 | N/A | N/A |
 | **Target Network Update** | N/A | Soft Polyak ($\tau = 0.005$) | N/A |
 | **Early Stopping Condition** | 25 consecutive updates $\ge 75\%$ win rate | 25 consecutive updates $\ge 75\%$ win rate | 25 consecutive updates $\ge 75\%$ win rate |
@@ -345,14 +343,14 @@ Models are evaluated across 12 full-length, non-exploratory test matches ($\epsi
 | **Heuristic FSM Rule-Agent** | 41.6% | 210.5s | 3,840.0 HP | 14.2 | 8.5 |
 | **Vanilla DQN (Pre-Fix)** | 0.0% | 300.0s (Timeout) | 3,720.1 HP | **81.1** | **29.8** |
 | **Fixed Double DQN** | 75.0% | 142.0s | 5,000.0 HP | 6.2 | 14.1 |
-| **Synchronous Q-Learning (A2C)** | 83.3% – 100% | 128.4s | 5,044.9 HP | 10.7 | 13.8 |
-| **Mini-Batch PPO (Proposed)** | **100.0%** | **94.2s** | **5,082.0 HP** | **9.4** | **11.2** |
+| **A2C ("qlearning")** | 83.3% – 100% | 128.4s | 5,044.9 HP | 10.7 | 13.8 |
+| **PPO (Proposed)** | **100.0%** | **94.2s** | **5,082.0 HP** | **9.4** | **11.2** |
 
 #### Why DQN Failed at Update 400 (The "Infinite Stall Loop")
 Prior to our reward restructuring, DQN achieved 0.0% win rate across 400 updates despite maintaining an 88.9% survival rate. Inspection of logs revealed the agent switched 81 times per match and healed 11,414 HP, running the 300-second timer to expiration. Because timing out carried only a $-20$ penalty while switching yielded $+3.0$ and healing $+4.0$, Double DQN discovered that endless defensive stalling produced positive net returns ($+250$ to $+350$). Introducing a severe timeout defeat penalty ($-100$) and forbidding mid-attack switching immediately eliminated the stall loop.
 
-#### Why Q-Learning Was Jagged vs PPO Stability
-Q-Learning exhibited sharp oscillations (e.g. 8.3% $\to$ 83.3% $\to$ 100% $\to$ 66%). Because vanilla Advantage Actor-Critic lacks clipping, noisy advantage estimates induced policy churn. Mini-Batch PPO enforced trust-region bounds ($\epsilon = 0.2$), producing monotonic convergence.
+#### Why A2C Was Jagged vs PPO Stability
+A2C exhibited sharp oscillations (e.g. 8.3% $\to$ 83.3% $\to$ 100% $\to$ 66%). Because vanilla Advantage Actor-Critic lacks clipping, noisy advantage estimates induced policy churn. PPO's clipped ratio ($\epsilon = 0.2$) limits how far each update moves the policy, giving steadier convergence.
 
 ---
 
@@ -370,12 +368,11 @@ Compared to baseline heuristic rotation scripts (swapping on rigid timers), the 
 | **Remove Post-Buff Stats (Indices 9–23)** | $-58.3\%$ ($41.7\%$ Win) | Agent attacks randomly with supports during buff window; fails to pass field to Diluc. |
 | **Remove Look-Ahead Tokens (Indices 58–89)** | $-33.3\%$ ($66.7\%$ Win) | Parry success rate drops to $0.0$; agent cannot anticipate heavy boss strikes. |
 | **Remove Action Masking** | $-100.0\%$ ($0.0\%$ Win) | Model repeatedly attempts abilities on cooldown, accumulating penalties. |
-| **Remove Mini-Batch Shuffling (Full-Batch PPO)** | $-25.0\%$ ($75.0\%$ Win) | Auto-correlation across consecutive frames slows convergence by $3\times$. |
 
 ---
 
 ### 11. Robustness & Generalization Analysis
-* **Starting Character Perturbation**: The policy was evaluated across forced initial deployments (starting with Knight, Mage, or Rogue). Mini-Batch PPO demonstrated 100% win rates regardless of starting hero, immediately executing corrective opening swaps.
+* **Starting Character Perturbation**: The policy was evaluated across forced initial deployments (starting with Knight, Mage, or Rogue). PPO demonstrated 100% win rates regardless of starting hero, immediately executing corrective opening swaps.
 * **Boss Cooldown Variance**: When boss attack frequency was increased by 20%, the agent shifted from aggressive basic attack spam to defensive dodge/parry postures, maintaining an 83.3% win rate.
 
 ---
@@ -387,4 +384,4 @@ Compared to baseline heuristic rotation scripts (swapping on rigid timers), the 
 ---
 
 ### 13. Conclusion and Future Work
-This paper presented a complete end-to-end reinforcement learning framework for multi-character ARPG combat in Godot 4. By integrating real-time post-buff effective statistics, look-ahead token perception, and hierarchical action masking, our Mini-Batch PPO policy mastered complex team synergies, consistently defeating the boss encounter with zero casualties. Future work will investigate transformer-based sequential policies for arbitrary party sizes and continuous motion matching in 3D physics space.
+This paper presented a complete end-to-end reinforcement learning framework for multi-character ARPG combat in Godot 4. By integrating real-time post-buff effective statistics, look-ahead token perception, and hierarchical action masking, our PPO policy mastered complex team synergies, consistently defeating the boss encounter with zero casualties. Future work will investigate transformer-based sequential policies for arbitrary party sizes and continuous motion matching in 3D physics space.
