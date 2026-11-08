@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://dmbrlxnranwbu"]
+
+[ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://addons/proto_controller/proto_controller.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://ca3sbstn4lqvw" path="res://assets/scenes/skeleton_warrior.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://labx7soutxad" path="res://Scripts/boss_skelly.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://dfoy4dmefbhqs" path="res://Scripts/player_manage.gd" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://c1qeve5gouub6" path="res://assets/scenes/Diluc.tscn" id="5_5vw27"]
+[ext_resource type="Script" uid="uid://cldklyjjeinj6" path="res://Scripts/diluc.gd" id="6_kek77"]
+[ext_resource type="Script" path="res://Scripts/lisa.gd" id="6_lisa"]
+[ext_resource type="Script" path="res://Scripts/lynae.gd" id="6_lynae"]
+[ext_resource type="PackedScene" uid="uid://dokiu5440owwa" path="res://assets/scenes/Lisa.tscn" id="7_4c57u"]
+[ext_resource type="PackedScene" uid="uid://dk58tmr6dd3f8" path="res://assets/scenes/Lynae.tscn" id="8_efxa6"]
+[ext_resource type="Script" uid="uid://cw1gp3fnsc70y" path="res://Scripts/combat_manager.gd" id="9_combat"]
+[ext_resource type="PackedScene" uid="uid://dw4q3e68geiln" path="res://assets/Modular Dungeon/Wall/4x3/wall_4x3_03.gltf" id="10_4c57u"]
+[ext_resource type="PackedScene" uid="uid://bofdl6shyro2q" path="res://assets/Modular Dungeon/Floor/Tiles/floor_tiles_01.gltf" id="11_dg77c"]
+[ext_resource type="PackedScene" uid="uid://djvf36ff8s6eq" path="res://assets/Modular Dungeon/Lamp/Wall/lamp_wall_02.gltf" id="12_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://bl4biw8i30j7d" path="res://assets/Modular Dungeon/Barrel/barrel_02.gltf" id="13_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://tv8ot3xquf0m" path="res://assets/Modular Dungeon/Chest/02/chest_02_001.gltf" id="14_yaehf"]
+[ext_resource type="PackedScene" uid="uid://digq6ml0pcos6" path="res://assets/Modular Dungeon/Door/door_001.gltf" id="15_074og"]
+[ext_resource type="PackedScene" uid="uid://u2egpcn48b1m" path="res://assets/Modular Dungeon/Roof/Set3/roof_set3_03.gltf" id="16_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://c25kuch33k6tc" path="res://assets/Modular Dungeon/Tomb/Tomb/tomb_02.gltf" id="16_yaehf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+glow_enabled = true
+
+[node name="Main" type="Node3D" unique_id=1133667486]
+script = ExtResource("9_combat")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=513921537]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=319023407]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 26.703133, 0)
+light_color = Color(0.9137255, 1, 0.8235294, 1)
+shadow_enabled = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=765501168]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=56444172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.34838867, 0)
+use_collision = true
+size = Vector3(20.235352, 0.30322266, 20.010742)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D" unique_id=1315205010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.032972336, 3.4198132, -0.06008935)
+use_collision = true
+radius = 10.040527
+height = 7.5200195
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D/CSGCylinder3D" unique_id=890067975]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44091797, 0)
+operation = 2
+radius = 9.658691
+height = 8.932617
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D/CSGCylinder3D" unique_id=138700392]
+transform = Transform3D(0.9154853, 0, -0.40235135, 0, 1, 0, 0.40235135, 0, 0.9154853, -8.406848, -1.4802017, -3.6364658)
+operation = 2
+size = Vector3(1, 4.3869476, 2.9556274)
+
+[node name="ProtoController" parent="." unique_id=736675113 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08329213, -0.1967783, 7.600512)
+can_jump = false
+
+[node name="Skeleton_Warrior" parent="." unique_id=173096015 instance=ExtResource("3_1bvp3")]
+transform = Transform3D(-0.016100347, 0, -1.9999353, 0, 2, 0, 1.9999353, 0, -0.016100347, 2.252697, -0.19488007, -0.4086058)
+script = ExtResource("4_1bvp3")
+
+[node name="Player" type="Node3D" parent="." unique_id=1212004074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0605532, 0, 0)
+script = ExtResource("4_lquwl")
+
+[node name="Knight" parent="Player" unique_id=752733143 instance=ExtResource("5_5vw27")]
+transform = Transform3D(-0.105124086, 0, 0.99445915, 0, 1, 0, -0.99445915, 0, -0.105124086, -0.52757144, 0, 0)
+script = ExtResource("6_kek77")
+
+[node name="Mage" parent="Player" unique_id=788331567 instance=ExtResource("7_4c57u")]
+transform = Transform3D(-0.13583173, 0, 0.9907319, 0, 1, 0, -0.9907319, 0, -0.13583173, -0.7601259, 0, 0)
+script = ExtResource("6_lisa")
+
+[node name="Rogue" parent="Player" unique_id=141768306 instance=ExtResource("8_efxa6")]
+transform = Transform3D(-0.23498398, 0, 0.9719992, 0, 1, 0, -0.9719992, 0, -0.23498398, -0.99163663, 0, 0)
+script = ExtResource("6_lynae")
+
+[node name="Walls" type="Node3D" parent="." unique_id=1000092579]
+
+[node name="wall_4x3_033" parent="Walls" unique_id=2082603408 instance=ExtResource("10_4c57u")]
+transform = Transform3D(1.0171593, 0, -2.465416, 0, 4, 0, 2.465416, 0, 1.0171593, 3.546165, -0.19677663, 8.232933)
+
+[node name="wall_4x3_034" parent="Walls" unique_id=1569407988 instance=ExtResource("10_4c57u")]
+transform = Transform3D(1.0171593, 0, -2.465416, 0, 4, 0, 2.465416, 0, 1.0171593, -3.626255, -0.19677663, -8.344271)
+
+[node name="wall_4x3_035" parent="Walls" unique_id=256475828 instance=ExtResource("10_4c57u")]
+transform = Transform3D(-2.4677773, 0, -1.0114173, 0, 4, 0, 1.0114173, 0, -2.4677773, 8.472997, -0.19677663, -3.9296775)
+
+[node name="wall_4x3_036" parent="Walls" unique_id=1108898308 instance=ExtResource("10_4c57u")]
+transform = Transform3D(-1.0205773, 0, -2.464003, 0, 4, 0, 2.464003, 0, -1.0205773, 3.2881165, -0.19677663, -8.692559)
+
+[node name="wall_4x3_037" parent="Walls" unique_id=159943727 instance=ExtResource("10_4c57u")]
+transform = Transform3D(-2.4721575, 0, -1.0006629, 0, 4, 0, 1.0006629, 0, -2.4721575, -8.531627, -0.19677663, 3.2704105)
+
+[node name="wall_4x3_032" parent="Walls" unique_id=1600721076 instance=ExtResource("10_4c57u")]
+transform = Transform3D(2.4538918, 0, -1.0446551, 0, 4, 0, 1.0446551, 0, 2.4538918, 8.579617, -0.19677663, 3.5115724)
+
+[node name="wall_4x3_038" parent="Walls" unique_id=1071788453 instance=ExtResource("10_4c57u")]
+transform = Transform3D(-1.0025656, 0, -2.4713864, 0, 4, 0, 2.4713864, 0, -1.0025656, -3.5708098, -0.19677663, 8.210121)
+
+[node name="wall_4x3_039" parent="Walls" unique_id=927263778 instance=ExtResource("10_4c57u")]
+transform = Transform3D(-2.4623845, 0, 1.0244765, 0, 4, 0, -1.0244765, 0, -2.4623845, -8.144419, -0.13539857, -3.8345146)
+
+[node name="floor_tiles_012" parent="Walls" unique_id=1271396671 instance=ExtResource("11_dg77c")]
+transform = Transform3D(5.0000014, 0, 1.0728836e-06, 0, 4.9950023, 0, -1.0728836e-06, 0, 5.0000014, 4.4921975, -0.19677734, -5.483041)
+
+[node name="lamp_wall_022" parent="Walls" unique_id=1351430123 instance=ExtResource("12_ycdy4")]
+transform = Transform3D(2.3506875, 0, 0.8510393, 0, 2.5, 0, -0.8510393, 0, 2.3506875, -7.7133636, 4.1224937, 3.1798382)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Walls/lamp_wall_022" unique_id=876381185]
+transform = Transform3D(0.40000004, 0, -1.4901161e-08, 0, 0.39999998, 0, 1.4901161e-08, 0, 0.40000004, 0.07372427, 0.54694045, -0.06647563)
+light_color = Color(1, 0.6156863, 0.3137255, 1)
+light_energy = 7.812
+light_indirect_energy = 1.505
+light_volumetric_fog_energy = 15.099
+light_size = 0.693
+light_specular = 0.342
+distance_fade_enabled = true
+omni_range = 4096.0
+omni_attenuation = 3.778
+
+[node name="lamp_wall_023" parent="Walls" unique_id=173302071 instance=ExtResource("12_ycdy4")]
+transform = Transform3D(1.0550089, 0, -2.266485, 0, 2.4999995, 0, 2.266485, 0, 1.0550089, -2.7420883, 4.1224937, -7.874465)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Walls/lamp_wall_023" unique_id=234529275]
+transform = Transform3D(0.40000004, 0, -1.4901161e-08, 0, 0.39999998, 0, 1.4901161e-08, 0, 0.40000004, 0.07372427, 0.54694045, -0.06647563)
+light_color = Color(1, 0.6156863, 0.3137255, 1)
+light_energy = 7.812
+light_indirect_energy = 1.505
+light_volumetric_fog_energy = 15.099
+light_size = 0.693
+light_specular = 0.342
+distance_fade_enabled = true
+omni_range = 4096.0
+omni_attenuation = 3.778
+
+[node name="lamp_wall_024" parent="Walls" unique_id=78990488 instance=ExtResource("12_ycdy4")]
+transform = Transform3D(-2.3813353, 0, -0.76107824, 0, 2.4999995, 0, 0.76107824, 0, -2.3813353, 7.9505014, 4.1224937, -3.1496775)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Walls/lamp_wall_024" unique_id=1055276083]
+transform = Transform3D(0.40000004, 0, -1.4901161e-08, 0, 0.39999998, 0, 1.4901161e-08, 0, 0.40000004, 0.07372427, 0.54694045, -0.06647563)
+light_color = Color(1, 0.6156863, 0.3137255, 1)
+light_energy = 7.812
+light_indirect_energy = 1.505
+light_volumetric_fog_energy = 15.099
+light_size = 0.693
+light_specular = 0.342
+distance_fade_enabled = true
+omni_range = 4096.0
+omni_attenuation = 3.778
+
+[node name="lamp_wall_025" parent="Walls" unique_id=827039901 instance=ExtResource("12_ycdy4")]
+transform = Transform3D(-0.87361693, 0, 2.34239, 0, 2.4999995, 0, -2.34239, 0, -0.87361693, 3.334221, 3.8584483, 7.49186)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Walls/lamp_wall_025" unique_id=1090147818]
+transform = Transform3D(0.40000004, 0, -1.4901161e-08, 0, 0.39999998, 0, 1.4901161e-08, 0, 0.40000004, 0.07372427, 0.54694045, -0.06647563)
+light_color = Color(1, 0.6156863, 0.3137255, 1)
+light_energy = 7.812
+light_indirect_energy = 1.505
+light_volumetric_fog_energy = 15.099
+light_size = 0.693
+light_specular = 0.342
+distance_fade_enabled = true
+omni_range = 4096.0
+omni_attenuation = 3.778
+
+[node name="barrel_022" parent="Walls" unique_id=587916619 instance=ExtResource("13_2cqfq")]
+transform = Transform3D(2.5, 0, -5.9604645e-08, 0, 2.5, 0, 5.9604645e-08, 0, 2.5, 8.595636, -0.16895127, 0.18040109)
+
+[node name="barrel_023" parent="Walls" unique_id=1763264009 instance=ExtResource("13_2cqfq")]
+transform = Transform3D(2.5, 0, -5.9604645e-08, 0, 2.5, 0, 5.9604645e-08, 0, 2.5, 8.050485, -0.16895127, -1.6870277)
+
+[node name="barrel_024" parent="Walls" unique_id=696167473 instance=ExtResource("13_2cqfq")]
+transform = Transform3D(2.5, 0, -5.9604645e-08, 0, 2.5, 0, 5.9604645e-08, 0, 2.5, 8.127664, 2.166537, -0.85683036)
+
+[node name="chest_02_0012" parent="Walls" unique_id=985120310 instance=ExtResource("14_yaehf")]
+transform = Transform3D(0.6691645, 0, -1.884733, 0, 2, 0, 1.884733, 0, 0.6691645, -2.7216785, -0.19677663, -7.205194)
+
+[node name="door_0012" parent="Walls" unique_id=1536265965 instance=ExtResource("15_074og")]
+transform = Transform3D(3.6777136, 0, -0.98314345, 0, 2.5, 0, 1.5730295, 0, 2.298571, -8.361407, -0.065116644, -1.5404443)
+
+[node name="tomb_022" parent="Walls" unique_id=1290299215 instance=ExtResource("16_yaehf")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 4.1164804, -0.1967771, -0.5815177)
+
+[node name="roof_set3_032" parent="." unique_id=382482754 instance=ExtResource("16_2cqfq")]
+transform = Transform3D(4.7182965, 0, 1.6545932, 0, 5, 0, -1.6545932, 0, 4.7182965, -0.024459839, 8.837593, -0.36243343)
