@@ -135,13 +135,34 @@ Each trainer evaluates the greedy policy on 12 fights every update, can stop ear
 
 ## Setup
 
-**Requirements:** [Godot 4.7](https://godotengine.org/download) and Python 3.10 or newer.
+You need **[Godot 4.7](https://godotengine.org/download)** to play. **Python 3.10 or newer** is only needed for the trained agent (SIMULATE) and for training (TRAIN).
+
+### 1. Get the project
 
 ```bash
 git clone https://github.com/JATAYU000/Team_rotation_optimiser.git
 cd Team_rotation_optimiser
+```
 
+Or use **Code → Download ZIP** on GitHub and unzip it.
+
+### 2. Open and play it in Godot
+
+1. Download **Godot 4.7, the standard version** (not the .NET / C# version) from [godotengine.org/download](https://godotengine.org/download). There is nothing to install: unzip it and run the Godot executable.
+2. In the **Project Manager**, click **Import**, browse to the `Team_rotation_optimiser` folder, select `project.godot`, then click **Import & Edit**.
+3. The first time, Godot imports all the models, animations and textures. Wait until the progress bar at the bottom of the editor finishes; this can take a minute or two.
+4. Press **F5**, or the **▶ Run Project** button at the top right. The title screen opens.
+5. Press **START** to play yourself. The controls are in [Usage](#usage).
+
+From a terminal, `godot --path .` in the project folder does the same as steps 2–4. Use your Godot executable's name or path in place of `godot`.
+
+### 3. Set up Python for the agent (SIMULATE and TRAIN)
+
+Create a virtual environment named `.venv` in the project folder and install the dependencies:
+
+```bash
 python -m venv .venv
+
 # Windows
 .venv\Scripts\activate
 # Linux / macOS
@@ -150,7 +171,17 @@ source .venv/bin/activate
 pip install -r RL/requirements.txt matplotlib
 ```
 
-The game starts Python itself for TRAIN and SIMULATE. On Windows it uses `.venv\Scripts\python.exe` if that exists. On other systems it runs `python` from your `PATH`, so activate the virtual environment before launching Godot.
+The game starts Python by itself when you press SIMULATE or TRAIN:
+
+- **Windows:** it uses `.venv\Scripts\python.exe` automatically, so you can start Godot as usual.
+- **Linux / macOS:** it runs `python` from your `PATH`, so start Godot from the same terminal, after activating the environment:
+
+  ```bash
+  source .venv/bin/activate
+  godot --path .        # or the path to your Godot executable
+  ```
+
+If SIMULATE does nothing or shows an error, Python or PyTorch isn't being found. Check that `python -c "import torch"` works in the terminal you start Godot from.
 
 ---
 
@@ -158,12 +189,12 @@ The game starts Python itself for TRAIN and SIMULATE. On Windows it uses `.venv\
 
 ### In the game
 
-Open the folder in Godot 4.7 and press **Run**, or run `godot --path .` from the repository root. On the title screen:
+On the title screen:
 
 | Button | What it does |
 |---|---|
 | **START** | Play yourself: left mouse = Basic, right mouse = Heavy, E = Skill, Q = Ultimate, 1 / 2 / 3 = switch, Shift = dodge |
-| **SIMULATE** | Watch the trained agent play, using the model chosen in the dropdown (PPO, DQN or Q-Learning) |
+| **SIMULATE** | Watch the trained agent play, using the model chosen in the RL MODEL dropdown (PPO, DQN or Q-Learning) |
 | **TRAIN** | Train the chosen model with the current stats, with a live progress panel. This replaces that model's checkpoint. |
 | **SAVE** | Save edited stats and rhythms |
 
@@ -177,7 +208,7 @@ python RL/train_ppo.py --updates 500 --seed 7
 python RL/train_dqn.py --updates 500
 python RL/train_qlearning.py --updates 500
 
-# Better exploration for PPO (see the note below)
+# Train PPO without the ε-greedy exploration
 python RL/train_ppo.py --updates 500 --epsilon-start 0 --epsilon-end 0
 
 # Evaluate a PPO checkpoint
