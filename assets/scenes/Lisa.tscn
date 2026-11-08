@@ -1,0 +1,366 @@
+[gd_scene format=3 uid="uid://dokiu5440owwa"]
+
+[ext_resource type="PackedScene" uid="uid://dq1i7i6i1rfjl" path="res://assets/charectors/Mage.glb" id="1_t7psr"]
+[ext_resource type="PackedScene" uid="uid://lvl1rc75ldly" path="res://assets/tools/staff.gltf" id="2_3l4dn"]
+[ext_resource type="AnimationLibrary" uid="uid://cgphgpy7vokry" path="res://assets/animations/rig_med/Player.res" id="2_w5m0h"]
+[ext_resource type="PackedScene" uid="uid://thf5s2vnydu3" path="res://assets/tools/spellbook_open.gltf" id="3_3l4dn"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jtekq"]
+animation = &"Player/Ranged_1H_Aiming"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_f2qw1"]
+animation = &"Player/Ranged_Magic_Spellcasting"
+use_custom_timeline = true
+timeline_length = 3.0
+stretch_time_scale = false
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ait7t"]
+animation = &"Player/Ranged_1H_Reload"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sqj74"]
+animation = &"Player/Death_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3l4dn"]
+animation = &"Player/Spawn_Air"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_53kfa"]
+animation = &"Player/Hit_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x3ys8"]
+animation = &"Player/Idle_A"
+use_custom_timeline = true
+timeline_length = 0.8666667
+stretch_time_scale = false
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_dfovt"]
+animation = &"Player/Ranged_Magic_Spellcasting_Long"
+use_custom_timeline = true
+timeline_length = 4.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nk8a5"]
+animation = &"Player/Melee_Block_Hit"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m7tk2"]
+animation = &"Player/Ranged_Magic_Shoot"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_r8ptb"]
+animation = &"Player/Melee_2H_Attack_Spin"
+use_custom_timeline = true
+timeline_length = 2.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_posxl"]
+animation = &"Player/Spawn_Air"
+play_mode = 1
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qi8dp"]
+animation = &"Player/Ranged_Magic_Summon"
+use_custom_timeline = true
+timeline_length = 5.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_di3k0"]
+animation = &"Player/Ranged_Magic_Shoot"
+use_custom_timeline = true
+timeline_length = 2.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7ecv8"]
+animation = &"Player/Ranged_Magic_Shoot"
+use_custom_timeline = true
+timeline_length = 1.5
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ait7t"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sqj74"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_53kfa"]
+xfade_time = 0.5
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nk8a5"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jtekq"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_f2qw1"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dfovt"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r8ptb"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qi8dp"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_di3k0"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7ecv8"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ieest"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sds8l"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+advance_condition = &"True"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sarvh"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t8x16"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_scfrf"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sw7o0"]
+xfade_time = 0.5
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_53xgm"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1m345"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lvn7q"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vbtg4"]
+xfade_time = 0.5
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_o4jfy"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_j44ml"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6fgtj"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gc8hj"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_g0c7w"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pqsuy"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_miftv"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1m6bq"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_g25j1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3u76g"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yoh6o"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pldsu"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ff0nu"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bdwk6"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_74a0f"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_eibxq"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qvoco"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5h7tb"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_3l4dn"]
+states/Aim/node = SubResource("AnimationNodeAnimation_jtekq")
+states/Aim/position = Vector2(378, -61.886063)
+states/Charge/node = SubResource("AnimationNodeAnimation_f2qw1")
+states/Charge/position = Vector2(476, -18.886063)
+states/Cross/node = SubResource("AnimationNodeAnimation_ait7t")
+states/Cross/position = Vector2(270, -113.88606)
+states/Death/node = SubResource("AnimationNodeAnimation_sqj74")
+states/Death/position = Vector2(962, 177.11394)
+states/Drop/node = SubResource("AnimationNodeAnimation_3l4dn")
+states/Drop/position = Vector2(164, 91)
+states/End/position = Vector2(1102, 91)
+states/Hit/node = SubResource("AnimationNodeAnimation_53kfa")
+states/Hit/position = Vector2(855, 172.11394)
+states/Idle/node = SubResource("AnimationNodeAnimation_x3ys8")
+states/Idle/position = Vector2(283, 91)
+states/Long/node = SubResource("AnimationNodeAnimation_dfovt")
+states/Long/position = Vector2(208, 211.39221)
+states/Parry/node = SubResource("AnimationNodeAnimation_nk8a5")
+states/Parry/position = Vector2(855, -28.886063)
+states/Shoot/node = SubResource("AnimationNodeAnimation_m7tk2")
+states/Shoot/position = Vector2(186, -53.886063)
+states/Spin/node = SubResource("AnimationNodeAnimation_r8ptb")
+states/Spin/position = Vector2(416, 274.3922)
+states/Start/position = Vector2(66, 91)
+states/Switch/node = SubResource("AnimationNodeAnimation_posxl")
+states/Switch/position = Vector2(975, 91)
+states/Yo/node = SubResource("AnimationNodeAnimation_qi8dp")
+states/Yo/position = Vector2(311, 183.11394)
+states/pew/node = SubResource("AnimationNodeAnimation_di3k0")
+states/pew/position = Vector2(311, 267.3922)
+states/pew2/node = SubResource("AnimationNodeAnimation_7ecv8")
+states/pew2/position = Vector2(543, 274.3922)
+transitions = ["Drop", "Idle", SubResource("AnimationNodeStateMachineTransition_ait7t"), "Switch", "End", SubResource("AnimationNodeStateMachineTransition_sqj74"), "Start", "Drop", SubResource("AnimationNodeStateMachineTransition_53kfa"), "Idle", "Switch", SubResource("AnimationNodeStateMachineTransition_nk8a5"), "Idle", "Shoot", SubResource("AnimationNodeStateMachineTransition_jtekq"), "Parry", "Idle", SubResource("AnimationNodeStateMachineTransition_f2qw1"), "Shoot", "Cross", SubResource("AnimationNodeStateMachineTransition_dfovt"), "Cross", "Idle", SubResource("AnimationNodeStateMachineTransition_r8ptb"), "Death", "End", SubResource("AnimationNodeStateMachineTransition_qi8dp"), "Hit", "Death", SubResource("AnimationNodeStateMachineTransition_di3k0"), "Hit", "Idle", SubResource("AnimationNodeStateMachineTransition_7ecv8"), "Aim", "Charge", SubResource("AnimationNodeStateMachineTransition_ieest"), "Charge", "Idle", SubResource("AnimationNodeStateMachineTransition_sds8l"), "Idle", "Aim", SubResource("AnimationNodeStateMachineTransition_sarvh"), "Idle", "Yo", SubResource("AnimationNodeStateMachineTransition_t8x16"), "Yo", "Idle", SubResource("AnimationNodeStateMachineTransition_scfrf"), "Idle", "Long", SubResource("AnimationNodeStateMachineTransition_sw7o0"), "Long", "pew", SubResource("AnimationNodeStateMachineTransition_53xgm"), "pew", "Spin", SubResource("AnimationNodeStateMachineTransition_1m345"), "Spin", "pew2", SubResource("AnimationNodeStateMachineTransition_lvn7q"), "pew2", "Idle", SubResource("AnimationNodeStateMachineTransition_vbtg4"), "Shoot", "Parry", SubResource("AnimationNodeStateMachineTransition_o4jfy"), "Cross", "Parry", SubResource("AnimationNodeStateMachineTransition_j44ml"), "Aim", "Parry", SubResource("AnimationNodeStateMachineTransition_6fgtj"), "Charge", "Parry", SubResource("AnimationNodeStateMachineTransition_gc8hj"), "Yo", "Parry", SubResource("AnimationNodeStateMachineTransition_g0c7w"), "Long", "Parry", SubResource("AnimationNodeStateMachineTransition_pqsuy"), "pew", "Parry", SubResource("AnimationNodeStateMachineTransition_miftv"), "Spin", "Parry", SubResource("AnimationNodeStateMachineTransition_1m6bq"), "pew2", "Parry", SubResource("AnimationNodeStateMachineTransition_g25j1"), "Shoot", "Hit", SubResource("AnimationNodeStateMachineTransition_3u76g"), "Cross", "Hit", SubResource("AnimationNodeStateMachineTransition_yoh6o"), "Aim", "Hit", SubResource("AnimationNodeStateMachineTransition_pldsu"), "Charge", "Hit", SubResource("AnimationNodeStateMachineTransition_ff0nu"), "Yo", "Hit", SubResource("AnimationNodeStateMachineTransition_bdwk6"), "Long", "Hit", SubResource("AnimationNodeStateMachineTransition_74a0f"), "pew", "Hit", SubResource("AnimationNodeStateMachineTransition_eibxq"), "Spin", "Hit", SubResource("AnimationNodeStateMachineTransition_qvoco"), "pew2", "Hit", SubResource("AnimationNodeStateMachineTransition_5h7tb")]
+graph_offset = Vector2(0, -13.862621)
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_r1w20"]
+graph_offset = Vector2(-92.16382, -48.452316)
+nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_3l4dn")
+nodes/StateMachine/position = Vector2(40, 60)
+node_connections = [&"output", 0, &"StateMachine"]
+
+[node name="Mage" unique_id=788331567 instance=ExtResource("1_t7psr")]
+
+[node name="Skeleton3D" parent="Rig_Medium" parent_id_path=PackedInt32Array(1448898761) index="0" unique_id=91688662]
+bones/1/position = Vector3(0, 0.38733593, 0)
+bones/1/rotation = Quaternion(0.0027272936, 0.043157585, 0.000117816846, 0.99906456)
+bones/1/scale = Vector3(0.99999994, 1, 0.99999994)
+bones/2/position = Vector3(-0.17094508, 0.11358732, 1.557549e-08)
+bones/2/rotation = Quaternion(0.9960444, -0.030469239, 0.03118956, 0.07742433)
+bones/2/scale = Vector3(0.9999999, 0.99999976, 1.0000008)
+bones/3/rotation = Quaternion(0.31649947, -6.205498e-08, 2.1962893e-07, 0.9485927)
+bones/3/scale = Vector3(0.99999994, 0.99999976, 0.99999994)
+bones/4/rotation = Quaternion(-0.5823442, 0.11418377, -0.01228591, 0.8047897)
+bones/4/scale = Vector3(0.99999976, 1.0000006, 0.9999992)
+bones/5/rotation = Quaternion(-8.934892e-05, 0.9202217, -0.3913977, 2.0290998e-05)
+bones/5/scale = Vector3(1.0000002, 0.9999979, 1.0000024)
+bones/6/rotation = Quaternion(0.0076234858, 1.8432442e-09, 0.00065987196, 0.9999708)
+bones/6/scale = Vector3(1.0000001, 1, 1.0000001)
+bones/7/rotation = Quaternion(-0.0017381826, 1.5167059e-09, -0.0001504532, 0.9999985)
+bones/7/scale = Vector3(1, 0.9999999, 1)
+bones/8/position = Vector3(0.21200737, 0.13413215, 8.216504e-08)
+bones/8/rotation = Quaternion(-0.53722036, -0.10807506, -0.76648587, 0.33498287)
+bones/8/scale = Vector3(0.9999993, 0.99999905, 0.9999998)
+bones/9/rotation = Quaternion(1.3967923e-08, -6.287977e-08, -0.37090835, 0.9286696)
+bones/9/scale = Vector3(1.0000004, 0.9999998, 1)
+bones/10/rotation = Quaternion(1.514567e-08, -7.3584383e-09, 0.0266581, 0.99964464)
+bones/10/scale = Vector3(1.0000001, 1, 1)
+bones/11/rotation = Quaternion(-0.22094136, -0.3442886, 0.1808594, 0.89439374)
+bones/11/scale = Vector3(0.99999976, 1.0000001, 1.0000004)
+bones/12/position = Vector3(5.138494e-10, 0.096125126, -0.057500005)
+bones/12/rotation = Quaternion(0.0014927482, 0.0014927639, -0.70160496, 0.71256304)
+bones/12/scale = Vector3(1, 1, 1)
+bones/13/rotation = Quaternion(-0.008143346, -0.031340707, -0.00044830295, 0.99947554)
+bones/13/scale = Vector3(0.99999994, 1, 1)
+bones/14/position = Vector3(-0.21200736, 0.13413227, 8.62731e-08)
+bones/14/rotation = Quaternion(-0.5638616, 0.03825034, 0.73133117, 0.38177454)
+bones/14/scale = Vector3(0.9999992, 0.9999988, 0.9999998)
+bones/15/rotation = Quaternion(-1.8450055e-09, 6.359038e-08, 0.3854697, 0.9227205)
+bones/15/scale = Vector3(1.0000004, 0.99999976, 1.0000001)
+bones/16/rotation = Quaternion(2.249753e-10, 6.8246844e-09, -0.026658092, 0.99964464)
+bones/16/scale = Vector3(0.99999994, 0.99999994, 1)
+bones/17/rotation = Quaternion(-0.21130893, 0.38134596, -0.13498941, 0.8897763)
+bones/17/scale = Vector3(0.9999995, 0.99999994, 1.0000005)
+bones/18/position = Vector3(-1.5415026e-08, 0.096125185, -0.057500005)
+bones/18/rotation = Quaternion(0.001492751, -0.0014927608, 0.70160496, 0.71256304)
+bones/18/scale = Vector3(1, 1.0000001, 1.0000001)
+bones/19/position = Vector3(0.17094508, 0.1135872, 1.5994095e-08)
+bones/19/rotation = Quaternion(0.9905735, 0.057767574, 0.0710612, 0.101869665)
+bones/19/scale = Vector3(0.9999999, 0.9999997, 1.0000008)
+bones/20/rotation = Quaternion(0.30584824, 6.4702775e-08, -2.0422645e-07, 0.95208025)
+bones/20/scale = Vector3(1.0000004, 0.99999994, 1.0000001)
+bones/21/rotation = Quaternion(-0.5537787, -0.11307438, 0.045863733, 0.82367456)
+bones/21/scale = Vector3(1.0000004, 1.0000007, 0.9999993)
+bones/22/rotation = Quaternion(-9.676492e-07, 0.9202346, -0.39136732, 2.877178e-07)
+bones/22/scale = Vector3(1.0000001, 0.9999975, 1.0000027)
+
+[node name="right" type="BoneAttachment3D" parent="Rig_Medium/Skeleton3D" index="8" unique_id=1878695242]
+transform = Transform3D(-1.41803175e-05, -0.2628408, -0.9648393, -0.99987006, -0.0154741565, 0.004231399, -0.01604261, 0.96471435, -0.2628066, -0.42419514, 0.5321178, 0.08078155)
+bone_name = "handslot.r"
+bone_idx = 18
+
+[node name="staff2" parent="Rig_Medium/Skeleton3D/right" index="0" unique_id=153771926 instance=ExtResource("2_3l4dn")]
+
+[node name="left" type="BoneAttachment3D" parent="Rig_Medium/Skeleton3D" index="9" unique_id=682877912]
+transform = Transform3D(9.583309e-07, 0.2628638, 0.96483284, 0.9998707, -0.015469365, 0.0042142943, 0.016033527, 0.96470815, -0.26283023, 0.42546093, 0.5348823, 0.08610058)
+bone_name = "handslot.l"
+bone_idx = 12
+
+[node name="spellbook_open2" parent="Rig_Medium/Skeleton3D/left" index="0" unique_id=1547464268 instance=ExtResource("3_3l4dn")]
+transform = Transform3D(-4.295045e-05, -0.6292349, 0.77721614, 0.056861505, 0.7759572, 0.6282188, -0.99838275, 0.044220507, 0.035745844, -0.15257251, 0.2436854, 0.007927209)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1" unique_id=907997896]
+libraries/Player = ExtResource("2_w5m0h")
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2" unique_id=1423536110]
+tree_root = SubResource("AnimationNodeBlendTree_r1w20")
+anim_player = NodePath("../AnimationPlayer")
+parameters/StateMachine/conditions/True = false

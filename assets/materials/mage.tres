@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dwxgmdmagfpaq"]
+
+[ext_resource type="Texture2D" uid="uid://c8kcxlh2saab6" path="res://assets/charectors/Mage_mage_texture.png" id="1_onnan"]
+
+[resource]
+resource_name = "mage"
+cull_mode = 2
+albedo_texture = ExtResource("1_onnan")
+roughness = 0.5
+metadata/_gltf_primary_texture_coord = 0
