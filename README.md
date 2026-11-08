@@ -237,9 +237,9 @@ Results as reported in [`RL_COMBAT_SYSTEM_REPORT.md`](RL_COMBAT_SYSTEM_REPORT.md
 | Advantage actor-critic | 83–100% | 128 s | 10.7 | 13.8 |
 | **PPO** | **100%** | **94 s** | 9.4 | 11.2 |
 
-![PPO training dashboard: win rate, damage, parries and dodges, field time per hero, switches and heals, survival, ability use, and loss over training](RL/plots/mini_ppo_dashboard_final.png)
+![Dueling Double DQN training dashboard: win rate, damage, parries and dodges, field time per hero, switches and heals, survival, ability use, and loss over 500 updates](RL/plots/dqn_dashboard_final.png)
 
-*PPO training dashboard. The dashboards for DQN and A2C are in [`RL/plots/`](RL/plots/).*
+*Dueling Double DQN training dashboard (500 updates). The plotting script labels every chart "PPO", but this run is DQN. The dashboards for the other models are in [`RL/plots/`](RL/plots/).*
 
 To reproduce a number with more fights than the in-training evaluation uses:
 
