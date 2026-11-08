@@ -15,7 +15,6 @@ Three agents are included: PPO, Dueling Double DQN, and an advantage actor-criti
 - [Setup](#setup)
 - [Usage](#usage)
 - [Results](#results)
-- [Known limitations](#known-limitations)
 
 ---
 
@@ -216,13 +215,3 @@ To reproduce a number with more fights than the in-training evaluation uses:
 ```bash
 python RL/evaluate_policy.py --checkpoint RL/checkpoints/diluc_ppo.pt --episodes 200
 ```
-
----
-
-## Known limitations
-
-- **Small evaluations.** Training evaluations use 12 fights, so a single run's win rate moves in steps of about 8%. Report final numbers over 200 or more fights and several seeds.
-- **Simulator timing.** The simulator starts boss attacks on a fixed 5-second grid. In the game, boss timing comes from animations (about 11.7 s to the first attack and about 4 s between attacks). Compare SIMULATE results with the simulator before relying on them.
-- **ε-greedy inside PPO.** PPO already explores by sampling from its policy. The random ε actions are stored with the policy's own log-probability, which biases the PPO update. In a test on the previous version of this code, two seeds trained with `--epsilon-start 0 --epsilon-end 0` reached 95–96% wins over 200 fights after 300 updates, against 12% and 66% with the default ε.
-- **Discrete 1-second decisions.** The agent acts once per tick, while the game's animations run continuously.
-- **Fixed team.** The observation is built for exactly these three heroes.
