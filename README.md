@@ -4,12 +4,25 @@ Reinforcement learning agents that play **Wushin**, a real-time, three-hero boss
 
 Three agents are included: PPO, Dueling Double DQN, and an advantage actor-critic. All three train in a Python copy of the game's combat rules and can then play the real game live through a small UDP policy server.
 
+## Screenshots
+
+![Battle: Diluc fighting The Skelly, with the boss HP bar, timer, hero HP, move cooldowns and dodge charges](docs/screenshots/battle.png)
+
+*The battle. The HUD shows the boss's HP and the timer at the top, and the active hero's HP, ability cooldowns and dodge charges at the bottom right.*
+
+![Title screen: editable stats, damage rhythms and buffs for every hero and the boss, plus SAVE, TRAIN, SIMULATE and START](docs/screenshots/title_screen.png)
+
+*The title screen. Every hero's and the boss's stats, damage rhythms and Skill / Ultimate buffs can be edited here. The panel on the right picks the RL model and device, trains it (TRAIN) or lets it play (SIMULATE).*
+
 ![PPO training dashboard](RL/plots/mini_ppo_dashboard_final.png)
+
+*PPO training dashboard.*
 
 ---
 
 ## Contents
 
+- [Screenshots](#screenshots)
 - [How it works](#how-it-works)
 - [The fight](#the-fight)
 - [The RL problem](#the-rl-problem)
