@@ -1,0 +1,246 @@
+{
+	"attack_buffs": {
+		"DILUC:Skill (5s)": "",
+		"DILUC:Ultimate (8s)": "",
+		"LISA:Skill (5s)": "H200",
+		"LISA:Ultimate (8s)": "H300CR30CD80",
+		"LYNAE:Skill (5s)": "",
+		"LYNAE:Ultimate (8s)": "A40D30"
+	},
+	"boss": {
+		"attack": 100.0,
+		"attack_patterns": {
+			"Atk 1 UP (9s)": [
+				"X",
+				"X",
+				"X",
+				"1",
+				"X",
+				"1",
+				"1",
+				"X",
+				"1"
+			],
+			"Atk 2 Summon (10s)": [
+				"X",
+				"X",
+				"X",
+				"X",
+				"X",
+				"3",
+				"X",
+				"3",
+				"3",
+				"X"
+			],
+			"Atk 3 Taunt (9s)": [
+				"X",
+				"X",
+				"X",
+				"X",
+				"1",
+				"X",
+				"1",
+				"X",
+				"1"
+			]
+		},
+		"battle_time": 300.0,
+		"defense": 10.0,
+		"display_name": "THE SKELLY",
+		"max_hp": 5000.0,
+		"moves": {
+			"Summon": {
+				"damage": 20.0,
+				"label": "SUMMON"
+			},
+			"Taunt": {
+				"damage": 15.0,
+				"label": "TAUNT"
+			},
+			"Up": {
+				"damage": 25.0,
+				"label": "UP"
+			}
+		}
+	},
+	"characters": {
+		"Knight": {
+			"attack": 25.0,
+			"attack_patterns": {
+				"Basic (2s)": [
+					"1",
+					"1"
+				],
+				"Heavy (4s)": [
+					"X",
+					"2",
+					"2",
+					"X"
+				],
+				"Skill (5s)": [
+					"X",
+					"X",
+					"3",
+					"3",
+					"X"
+				],
+				"Ultimate (8s)": [
+					"X",
+					"1",
+					"1",
+					"X",
+					"1",
+					"2",
+					"5",
+					"X"
+				]
+			},
+			"crit_damage": 1.8,
+			"crit_rate": 0.7,
+			"defense": 10.0,
+			"display_name": "DILUC",
+			"max_hp": 900.0,
+			"moves": {
+				"basic": {
+					"cooldown": 2.0,
+					"damage": 20.0,
+					"label": "BASIC"
+				},
+				"heavy": {
+					"cooldown": 4.0,
+					"damage": 35.0,
+					"label": "HEAVY"
+				},
+				"skill": {
+					"cooldown": 8.0,
+					"damage": 55.0,
+					"label": "SKILL"
+				},
+				"ultimate": {
+					"cooldown": 32.0,
+					"damage": 100.0,
+					"label": "ULT"
+				}
+			}
+		},
+		"Mage": {
+			"attack": 10.0,
+			"attack_patterns": {
+				"Basic (2s)": [
+					"1",
+					"X"
+				],
+				"Heavy (4s)": [
+					"X",
+					"1",
+					"1",
+					"1"
+				],
+				"Skill (5s)": [
+					"X",
+					"X",
+					"X",
+					"1",
+					"X"
+				],
+				"Ultimate (8s)": [
+					"X",
+					"X",
+					"1",
+					"1",
+					"X",
+					"X",
+					"1",
+					"X"
+				]
+			},
+			"crit_damage": 1.5,
+			"crit_rate": 0.5,
+			"defense": 20.0,
+			"display_name": "LISA",
+			"max_hp": 2000.0,
+			"moves": {
+				"basic": {
+					"cooldown": 2.0,
+					"damage": 20.0,
+					"label": "BASIC"
+				},
+				"heavy": {
+					"cooldown": 4.0,
+					"damage": 35.0,
+					"label": "HEAVY"
+				},
+				"skill": {
+					"cooldown": 8.0,
+					"damage": 55.0,
+					"label": "SKILL"
+				},
+				"ultimate": {
+					"cooldown": 32.0,
+					"damage": 100.0,
+					"label": "ULT"
+				}
+			}
+		},
+		"Rogue": {
+			"attack": 10.0,
+			"attack_patterns": {
+				"Basic (2s)": [
+					"X",
+					"1"
+				],
+				"Heavy (4s)": [
+					"X",
+					"X",
+					"1",
+					"1"
+				],
+				"Skill (5s)": [
+					"X",
+					"X",
+					"1",
+					"2",
+					"X"
+				],
+				"Ultimate (8s)": [
+					"X",
+					"2",
+					"X",
+					"2",
+					"2",
+					"2",
+					"2",
+					"X"
+				]
+			},
+			"crit_damage": 1.5,
+			"crit_rate": 0.5,
+			"defense": 30.0,
+			"display_name": "LYNAE",
+			"max_hp": 1500.0,
+			"moves": {
+				"basic": {
+					"cooldown": 2.0,
+					"damage": 20.0,
+					"label": "BASIC"
+				},
+				"heavy": {
+					"cooldown": 4.0,
+					"damage": 35.0,
+					"label": "HEAVY"
+				},
+				"skill": {
+					"cooldown": 8.0,
+					"damage": 55.0,
+					"label": "SKILL"
+				},
+				"ultimate": {
+					"cooldown": 32.0,
+					"damage": 100.0,
+					"label": "ULT"
+				}
+			}
+		}
+	}
+}
